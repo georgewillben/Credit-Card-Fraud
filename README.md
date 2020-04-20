@@ -5,7 +5,9 @@ In this project I take a look at credit card information and create a model to p
 
 ## How to navigate this project
 Here I will show you how to navigate this project and follow me through my project workflow.
+<br>
 <img src='Images/Data_Science_Process.png' height=200 width=200>
+<br><br>
 
 
 
