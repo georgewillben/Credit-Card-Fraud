@@ -1,14 +1,16 @@
 # Detecting attempted credit card fraud
 
 ## Introduction
-In this project I take a look at credit card information and create a model to predict fraud. The dataset can be found here on kaggle.com
+In this project I take a look at credit card information and create a model to predict fraud. The dataset can be found <a href=https://www.kaggle.com/mlg-ulb/creditcardfraud>here</a> on kaggle.com. 
 
 ## How to navigate this project
-Here I will show you how to navigate this project and follow me through my project workflow
+Here I will show you how to navigate this project and follow me through my project workflow.
+<img src='Images/Data_Science_Process.png' height=200 width=200>
+
 
 
 #### In this directory
-1) README.md is a file giving an overview of this project.
+1) Table_of_Contents.ipynb is a file giving an overview of this project.
 2) creditcard.csv is the original dataset and can be found in this directory.
 3) Data_Cleaning.ipynb is a notebook where I go through cleaning the data.
 4) Cleaned_data.csv is the product of my data cleaning.
@@ -28,27 +30,26 @@ The folowing notebooks are from the modeling stage of my project. The names of t
 
 #### Tools used
 ##### From sklearn
-MinMaxScaler
-StandardScaler
-RobustScaler
-LogisticRegression
-SVC
-KNeighborsClassifier
-DecisionTreeClassifier
-RandomForestClassifier
-PCA
-classification_report
+MinMaxScaler <br>
+StandardScaler<br>
+RobustScaler<br>
+LogisticRegression<br>
+SVC<br>
+KNeighborsClassifier<br>
+DecisionTreeClassifier<br>
+RandomForestClassifier<br>
+PCA<br>
+classification_report<br>
 
 ##### From imblearn
-SMOTE
-NearMiss
+SMOTE<br>
+NearMiss<br>
 
-##### 
-Others
-numpy
-pandas
-time
-pickle
-matplotlib
-seaborn
-scipy.stats
+##### Others
+numpy<br>
+pandas<br>
+time<br>
+pickle<br>
+matplotlib<br>
+seaborn<br>
+scipy.stats<br>
