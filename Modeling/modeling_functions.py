@@ -50,7 +50,7 @@ def removeOutliers(X_train, y_train):
         
     return new_X_train, new_y_train
 
-def customCV(clf, X, y, scaler_str, resampler, outlier_removal=False ,pca=None, print_splits=False):
+def customCV(clf, X, y, scaler, resampler, outlier_removal=False ,pca=None, print_splits=False):
     """
     Transforms data during cross validation and returns mean cross validated recall, precision, and f1 scores. Meant for imbalanced data.
     X and y must be pandas dataframe and/or series.
@@ -60,8 +60,7 @@ def customCV(clf, X, y, scaler_str, resampler, outlier_removal=False ,pca=None, 
     clf (object): a machine learning classifier with .fit and .predict methods
     X (object): Features, must be in form of pandas DataFrame
     y (object): Target, must be in form of pandas DataFrame
-    scaler_str (string): a string that lets the function know which scaling technique to use. Values must be either s1, s2, s3 or s4
-        See feature engineering notebook
+    scaler (object): a scaler from sklearn.preprocessing
     resampler (object): a resampling method such as SMOTE or NearMiss to make the data balanced during cross validation
         Must already be instantiated.
     outlier_removal (boolean, optional): if set to true will remove outliers that are more than four standard deviations 
@@ -82,7 +81,6 @@ def customCV(clf, X, y, scaler_str, resampler, outlier_removal=False ,pca=None, 
     from sklearn.model_selection import StratifiedKFold
     import numpy as np
     import pandas as pd
-    from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
     from sklearn.metrics import classification_report
      
     # Create a list to store scores for each fold
@@ -97,43 +95,9 @@ def customCV(clf, X, y, scaler_str, resampler, outlier_removal=False ,pca=None, 
         y_train, y_test = y.iloc[train_index], y.iloc[test_index]
         
         # Scale data
-        # Use if statements to scale the data based on scaler_str
-        
-        # MinMaxScaler
-        if scaler_str == 's1':
-            scaler = MinMaxScaler()
-            X_train_s = scaler.fit_transform(X_train)
-            X_test_s = scaler.transform(X_test)
-        
-        # Standard Scaler
-        if scaler_str == 's2':
-            scaler = StandardScaler()
-            X_train_s = scaler.fit_transform(X_train)
-            X_test_s = scaler.transform(X_test)
-        
-        # Robust Scaler
-        if scaler_str == 's3':
-            scaler = RobustScaler()
-            X_train_s = scaler.fit_transform(X_train)
-            X_test_s = scaler.transform(X_test)            
-        
-        # Robust Scaler but only on "Amount" and "Time" columns
-        if scaler_str == 's4':
-            scaler = RobustScaler()
-            X_train_s, X_test_s = X_train.copy(), X_test.copy()
-            X_train_s['Scaled_Amount'] = scaler.fit_transform(X_train['Amount'].values.reshape(-1,1))
-            X_test_s['Scaled_Amount'] = scaler.transform(X_test['Amount'].values.reshape(-1,1))
-            X_train_s.drop('Amount', axis=1, inplace=True)
-            X_test_s.drop('Amount', axis=1, inplace=True)
-            X_train_s['Scaled_Time'] = scaler.fit_transform(X_train['Time'].values.reshape(-1,1))
-            X_test_s['Scaled_Time'] = scaler.transform(X_test['Time'].values.reshape(-1,1))
-            X_train_s.drop('Time', axis=1, inplace=True)
-            X_test_s.drop('Time', axis=1, inplace=True)
-            
-          
-        if type(X_train_s) != type(pd.DataFrame([])):
-            X_train_s = pd.DataFrame(X_train_s, columns=X.columns)
-            X_test_s = pd.DataFrame(X_test_s, columns=X.columns)
+        X_train_s = scaler.fit_transform(X_train)
+        X_test_s = scaler.transform(X_test)
+        X_train_s, X_test_s = pd.DataFrame(X_train_s, columns=X.columns), pd.DataFrame(X_test_s, columns=X.columns)
             
         # Resample
         # Uses resampler passed in as parameter
@@ -192,7 +156,7 @@ def customCV(clf, X, y, scaler_str, resampler, outlier_removal=False ,pca=None, 
     
     
     
-def customGridSearchCV(clf, param_grid, X, y, scoring, scaler_str, resampler, outlier_removal=False, pca=None):
+def customGridSearchCV(clf, param_grid, X, y, scoring, scaler, resampler, outlier_removal=False, pca=None):
     from sklearn.model_selection import StratifiedKFold
     import numpy as np
     import pandas as pd
@@ -210,9 +174,8 @@ def customGridSearchCV(clf, param_grid, X, y, scoring, scaler_str, resampler, ou
     X (object): features. Must be in form of pandas dataframe or series
     y (object): target. Must be in form of pandas dataframe or series
     scoring (string): If set to 'recall', 'precision', or 'f1' will return parameter combination with best relevent score.
-        If set to manual will return all parameter combinations with their scores
-    scaler_str (sting): lets the function know what scaling technique to use. Can be s1, s2, s3, or s4. 
-        See feature engineering notebook
+        If set to 'custom' will return all parameter sets and score that have over 70% recall and over 30^ precision.
+    scaler (sting): a scaler object from sklearn.preprocessing
     resampler (object): instantiated resampler object. Used during cross validation to make the data balanced. E.g. SMOTE or NearMiss
     outlier_removal (boolean, optional): tells function whether or not to remove outliers. Used during cross validation
     pca (object, optional): pass an instantiated PCA object to apply PCA during cross validation
@@ -236,7 +199,7 @@ def customGridSearchCV(clf, param_grid, X, y, scoring, scaler_str, resampler, ou
     customCV_params = {
      'X' : X,
      'y' : y, 
-     'scaler_str' : scaler_str, 
+     'scaler' : scaler, 
      'resampler' : resampler, 
      'outlier_removal' : outlier_removal ,
      'pca' : pca   
@@ -275,9 +238,14 @@ def customGridSearchCV(clf, param_grid, X, y, scoring, scaler_str, resampler, ou
           
     # Find the best params based on scoring parameter
     # And return those params along with the scores
-    if scoring == 'manual':
+    if scoring == "all":
         for key in sorted(scores.keys()):
             print('\n', key, '\n recall', scores[key][0], '\n precision:', scores[key][1], '\n f1-score:', scores[key][2], '\n')
+            return scores
+    if scoring == 'custom':
+        for key in sorted(scores.keys()):
+            if (scores[key][0] > 0.5) & (scores[key][1] > 0.2):
+                print('\n', key, '\n recall', scores[key][0], '\n precision:', scores[key][1], '\n f1-score:', scores[key][2], '\n')
         return scores
     if scoring == 'recall':
         max_score = max([i[0] for i in scores.values()])
