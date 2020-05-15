@@ -25,10 +25,9 @@ Here I will show you how to navigate this project and follow me through my proje
 #### In Modeling
 The folowing notebooks are from the modeling stage of my project. The names of the files show what machine learning algorithm was used
 1) Logistic_Regression.ipynb
-2) Support_Vector_Machine.ipynb
-3) K_Nearest_Neighbors.ipynb
-4) Decision_Tree.ipynb
-5) Random_Forest.ipynb
+2) K_Nearest_Neighbors.ipynb
+3) Random_Forest.ipynb
+4) XGBoost.ipynb
 
 #### Tools used
 ##### From sklearn
@@ -55,9 +54,13 @@ pickle<br>
 matplotlib<br>
 seaborn<br>
 scipy.stats<br>
+xgboost <br>
 
 ## Data Source
 I found this dataset on <a href=https://www.kaggle.com/mlg-ulb/creditcardfraud>kaggle</a>
+
+## Exploratory Data Analysis
+During the data analysis stage I used critical thinking and data visualizations to come up with some insights in the data. I found if a transaction occurs more than once it is much more likely to be fraud, and that the ratio of fraud to non-fraud transactions raises during some hours of the day.
 
 ## Feature Engineering
 My approach to feature engineering was to first try four different scaling techniques. Then I resampled the data with NearMiss to make it balanced. After that I had four versions of the data, I tried removing outliers so that gave me eight versions of the data. Finally I took those eight versions of the data, duplicated them, and performed principal component analysis on the duplicates, giving me sixteen versions of the data.
