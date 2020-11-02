@@ -4,72 +4,33 @@
 In this project I take a look at credit card information and create a model to predict fraud. The dataset can be found <a href=https://www.kaggle.com/mlg-ulb/creditcardfraud>here</a> on kaggle.com. 
 
 ## How to navigate this project
-Here I will show you how to navigate this project and follow me through my project workflow.
-<br>
-<img src='Images/Data_Science_Process.png' height=200 width=200>
+Here I will show you how to navigate this project and follow me through my project workflow. The project Folders are numbered.<br>
+* 1 Business Understanding.pdf I go through why this project matters from a business perspective <br>
+* 2 Data Understanding.pdf I talk about the nature of the data and where to find it
+* 3 Data Cleaning.ipynb I clean the data up and make sure it is suitable for further analysis
+* 4 Explorartory Data Analysis.ipynb I use visualization and statistical tests to learn from the data 
+* 5 Modeling.ipynb I develope machine learning models capable of predicting fraud
+
 <br><br>
 
 
-
-#### In this directory
-1) Table_of_Contents.ipynb is a file giving an overview of this project.
-2) creditcard.csv is the original dataset and can be found in this directory.
-3) Data_Cleaning.ipynb is a notebook where I go through cleaning the data.
-4) Cleaned_data.csv is the product of my data cleaning.
-5) Exploritory_Data_Analysis.ipynb is a notebook where I go through exploritory data analysis.
-6) Feature_Engineering.ipynb is a notebook where I do Feature Engineering.
-7) Modeling is a folder containing notebooks going over machine learning models as well as data from the feature engineering stage and functions that I made.
-8) Executive_Summary.pdf is a pdf of a google slides presentation summarizing this project.
-9) Images is a folder containing images I used throughout this project.
-
-#### In Modeling
-The folowing notebooks are from the modeling stage of my project. The names of the files show what machine learning algorithm was used
-1) Logistic_Regression.ipynb
-2) K_Nearest_Neighbors.ipynb
-3) Random_Forest.ipynb
-4) XGBoost.ipynb
-
 #### Tools used
-##### From sklearn
-MinMaxScaler <br>
-StandardScaler<br>
-RobustScaler<br>
-LogisticRegression<br>
-SVC<br>
-KNeighborsClassifier<br>
-DecisionTreeClassifier<br>
-RandomForestClassifier<br>
-PCA<br>
-classification_report<br>
+* numpy <br>
+* pandas <br>
+* matplotlib <br>
+* seaborn <br>
+* scipy <br>
+* imblearn <br>
+* sklearn
 
-##### From imblearn
-SMOTE<br>
-NearMiss<br>
-
-##### Others
-numpy<br>
-pandas<br>
-time<br>
-pickle<br>
-matplotlib<br>
-seaborn<br>
-scipy.stats<br>
-xgboost <br>
-
-## Data Source
-I found this dataset on <a href=https://www.kaggle.com/mlg-ulb/creditcardfraud>kaggle</a>
+## Data Cleaning
+In this stage I inspect the data for missing values, adnormal values, and unnecessary data. I found the data mostly clean and ready to use. The "Time" feature would be innapporpriate to use because I only had data take over 58 hours so I removed it. I also removed some duplicate rows and used a stratified split to seperate training, validation, and test sets.
 
 ## Exploratory Data Analysis
-During the data analysis stage I used critical thinking and data visualizations to come up with some insights in the data. I found if a transaction occurs more than once it is much more likely to be fraud, and that the ratio of fraud to non-fraud transactions raises during some hours of the day.
-
-## Feature Engineering
-My approach to feature engineering was to first try four different scaling techniques. Then I resampled the data with NearMiss to make it balanced. After that I had four versions of the data, I tried removing outliers so that gave me eight versions of the data. Finally I took those eight versions of the data, duplicated them, and performed principal component analysis on the duplicates, giving me sixteen versions of the data.
+During the data analysis stage I used critical thinking and data visualizations to come up with some insights in the data. I found that the amount of a transaction does not indicate whether or not it is fraudlent. Also there where several columns that were highly indicative of fraud.
 
 ## Modeling
-I tried several machine learning models listed above. I created a function to perform hyper parameter tuning it takes in the desired scaler based on a string as a parameter as well as parameters that tell it whether to remove outliers and/or implement principal component analysis. The function prints out every combination of parameters with their cross validated recall and precision scores. The reason I did it this way is because I wanted to have a high recall and precision, but recall was much more important than precision.
-
-## Final Model
-After trying out several classifiers and hyper parameter combinations I created a support vector machine with %79 recall and %63 precision when cross validated on the data.
+In the modeling stage I used machine learning techniques to create a model to predict fraud. I experimented with logistic regression and random forest models. I tried several techniques such as recursive feature elimitation, principal component analysis, resampling with SMOTE, and hyper-parameter tuning. The final model was a random forest that achieved %79 recall and %34 precision. Meaning that %79 of frauds were detected and that the model issued a false flag for fraudulent activity twice for every real fraud.
 
 # Sources 
 1) Kaggle https://www.kaggle.com/mlg-ulb/creditcardfraud
